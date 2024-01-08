@@ -131,7 +131,7 @@ def show_pdf(file_path, page_number=1):
     with open(file_path, "rb") as f:
         base64_pdf = base64.b64encode(f.read()).decode('utf-8')
 
-    pdf_show = f'<iframe src="data:application/pdf;base64,{base64_pdf}#page={page_number}" width="700" height="1000" type="application/pdf"></iframe>'
+    pdf_show = f'<iframe src="data:application/pdf;base64,{base64_pdf}#page={page_number}" width="100%" height="100%" type="application/pdf"></iframe>'
 
     components.html(pdf_show)
 def main():
@@ -241,6 +241,10 @@ def main():
                                 f.write(uploaded_file.getbuffer())
                             st.success("Saved File:{} to storage".format(uploaded_file.name))
                         st.session_state.metadata_list = []
+
+    if "btn" not in st.session_state:
+        st.session_state.btn = []
+
     elif choose == "Chatbot":
         show_ui_chatbot()
 
@@ -251,13 +255,25 @@ def main():
             st.chat_message(msg["role"]).write(msg["content"])
 
         query = st.chat_input("🔎 Say something")
-        if query:
-            st.session_state.messages.append({"role": "user", "content": query})
-            st.chat_message("user").write(query)
-            response, metadata = function_calling(query)
-            st.session_state.messages.append({"role": "bot", "content": response})
-            st.chat_message("bot").write(response)
 
+        col1, col2, col3 = st.columns([3, 1, 3])
+        if query:
+            st.session_state.btn = []
+            with col1:
+                st.session_state.messages.append({"role": "user", "content": query})
+                st.chat_message("user").write(query)
+                response, metadata = function_calling(query)
+                st.session_state.messages.append({"role": "bot", "content": response})
+                st.chat_message("bot").write(response)
+            with col2:
+                for meta in metadata:
+                    page = meta['page']
+                    st.session_state.btn.append(st.button(f"{page}"))
+            if st.session_state.btn:
+                with col3:
+                    if st.session_state.btn:
+                        for meta in metadata:
+                            show_pdf(meta["source"], meta["page"]+1)
 
 if __name__ == "__main__":
     main()

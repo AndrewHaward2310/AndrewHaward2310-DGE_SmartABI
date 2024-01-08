@@ -122,7 +122,7 @@ def pdf_not_read(doc):
     code = doc["code"]
     line = doc["line"]
     description = doc["description"]
-    images = convert_from_path(file_path,poppler_path="E:\poppler-23.11.0\Library/bin")
+    images = convert_from_path(file_path,poppler_path="C:\\Users\\ldngu\\PycharmProjects\\DGE_SmartABI\\poppler-23.11.0\\Library\\bin")
     chunks =[]
     for page in range(len(images)):
         image = images[page]
