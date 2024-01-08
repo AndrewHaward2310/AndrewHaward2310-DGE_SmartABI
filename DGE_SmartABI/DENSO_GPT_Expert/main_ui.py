@@ -17,7 +17,7 @@ from Insert_weaviate_copy import Insert_Documents
 from FInal import function_calling
 import weaviate
 import streamlit.components.v1 as components
-
+from filter_bar import filter_bar
 load_dotenv(find_dotenv(),override=True)
 OPEN_AI_API_KEY = os.environ.get("OPEN_AI_API_KEY")
 current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
@@ -91,42 +91,42 @@ def image_to_base64(image):
 
 @st.cache_data
 def show_ui_chatbot():
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-        logo = f"assets/img/logo.png"
+    logo = f"assets/img/logo.png"
 
-        st.markdown(
-            """
-            <div style='
-                display: flex;
-                flex-direction: column; 
-                align-items: center; 
-                text-align: center;
-                max-width: 46rem; 
-                width: 100%; 
-                padding: 3rem; 
-                padding-right: 1rem; 
-                padding-left: 1rem; 
-            '>
-            """,
-            unsafe_allow_html=True
-        )
+    # components.html(filter_bar(logo))
 
-        # Center-aligning image
-        st.markdown(
-            f'<div style="display: flex; justify-content: center;">'
-            f'<img src="data:image/png;base64,{image_to_base64(logo)}" width="400">'
-            f'</div>',
-            unsafe_allow_html=True
-        )
+    st.markdown(
+        """
+        <div style='
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 46rem;
+            width: 100%;
+            padding: 3rem;
+            padding-right: 1rem;
+            padding-left: 1rem;
+        '>
+        """,
+        unsafe_allow_html=True
+    )
 
-        # Center-aligning text
-        st.markdown(
-            '<div style="display: flex; justify-content: center; padding-left: 3rem; ">'
-            '<h2>How can I help you today?</h2>'
-            '</div>',
-            unsafe_allow_html=True
-        )
+    # Center-aligning image
+    st.markdown(
+        f'<div style="display: flex; justify-content: center;">'
+        f'<img src="data:image/png;base64,{image_to_base64(logo)}" width="400">'
+        f'</div>',
+        unsafe_allow_html=True
+    )
+
+    # Center-aligning text
+    st.markdown(
+        '<div style="display: flex; justify-content: center; padding-left: 3rem; ">'
+        '<h2>How can I help you today?</h2>'
+        '</div>',
+        unsafe_allow_html=True
+    )
 def show_pdf(file_path, page_number=1):
     with open(file_path, "rb") as f:
         base64_pdf = base64.b64encode(f.read()).decode('utf-8')
@@ -254,7 +254,7 @@ def main():
         if query:
             st.session_state.messages.append({"role": "user", "content": query})
             st.chat_message("user").write(query)
-            response = function_calling(query)
+            response, metadata = function_calling(query)
             st.session_state.messages.append({"role": "bot", "content": response})
             st.chat_message("bot").write(response)
 

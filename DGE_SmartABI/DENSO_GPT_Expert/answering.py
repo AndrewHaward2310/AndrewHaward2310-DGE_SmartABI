@@ -3,7 +3,11 @@
 from openai import OpenAI
 import fitz
 import pandas
-client = OpenAI(api_key = "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")
+from dotenv import load_dotenv,find_dotenv
+import os
+load_dotenv(find_dotenv(),override=True)
+OPEN_AI_API_KEY = os.environ.get("OPEN_AI_API_KEY")
+client = OpenAI(api_key = OPEN_AI_API_KEY)
 from Retrive_weaviate import List_of_meta_data
 
 def extract_tables(metadatas: list[dict]):
