@@ -1,0 +1,1 @@
+from .Insert_weaviate_copy import insert_pdf_to_db
