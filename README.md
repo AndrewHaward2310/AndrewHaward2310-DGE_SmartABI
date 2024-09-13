@@ -19,3 +19,8 @@ docker-compose up -d
 
 ### Sử dụng
 Streamlit run main_ui.py
+
+
+
+https://github.com/user-attachments/assets/b49d93d7-b69c-4740-a1ce-44dfdcc7ecb3
+
